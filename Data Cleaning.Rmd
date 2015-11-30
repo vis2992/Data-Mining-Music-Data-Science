@@ -73,4 +73,11 @@ test.set = cleaned.data[-train,]
 rf = randomForest(cleaned.rating~., train.set, do.trace=T,sampsize = 20000, ntree=100)
 ```
 
+Boosted Trees:
+```{r}
+boost = gbm(cleaned.rating~., train.set, distribution = "gaussian", n.trees = 1000, shrinkage = 0.01,interaction.depth = 4, verbose = T)
+test <- predict(boost, test.set, n.trees = 1000)
+mean((test-ts$ratings)^2)
+```
+
 
