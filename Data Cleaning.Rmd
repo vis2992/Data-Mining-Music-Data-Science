@@ -12,6 +12,7 @@ words$Good.Lyrics[rows] <- words$Good.lyrics[rows];
 words$Good.lyrics <- NULL;
 words$OWN_ARTIST_MUSIC <- as.character(words$OWN_ARTIST_MUSIC);
 words$OWN_ARTIST_MUSIC[substr(words$OWN_ARTIST_MUSIC, 2, 2) == 'o'] <- 'DK';
+words$OWN_ARTIST_MUSIC[words$OWN_ARTIST_MUSIC == ""] <- 'DK';
 words$OWN_ARTIST_MUSIC <- as.factor(words$OWN_ARTIST_MUSIC);
 words$HEARD_OF[words$HEARD_OF == ''] <- 'Never heard of';
 words$HEARD_OF[words$HEARD_OF == 'Ever heard music by'] <- 'Heard of and listened to music EVER';
@@ -51,11 +52,25 @@ cleaned.training = cleaned[[1]]
 cleaned.test = cleaned[[2]]
 cleaned.rating = cleaned[[3]]
 cleaned.data = data.frame(cleaned.training, cleaned.rating)
+summary(cleaned.data)
+```
+
+Single Tree:
+```{r}
 library(tree)
 data.tree = tree(cleaned.rating~.,cleaned.data)
 summary(data.tree)
 plot(data.tree)
 text(data.tree, pretty = 0)
+```
+
+Random Forrest:
+```{r}
+set.seed(2)
+train = sample(1:nrow(cleaned.data), 150000)
+train.set = cleaned.data[train,]
+test.set = cleaned.data[-train,]
+rf = randomForest(cleaned.rating~., train.set, do.trace=T,sampsize = 20000, ntree=100)
 ```
 
 
