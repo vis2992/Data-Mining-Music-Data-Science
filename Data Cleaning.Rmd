@@ -46,4 +46,16 @@ testfeats <- domerge(test);
 
 cleaned <- list(trainfeats=trainfeats, testfeats=testfeats, ratings=train$Rating)
 summary(cleaned)
+save(cleaned, file = "cleaned.RData")
+cleaned.training = cleaned[[1]]
+cleaned.test = cleaned[[2]]
+cleaned.rating = cleaned[[3]]
+cleaned.data = data.frame(cleaned.training, cleaned.rating)
+library(tree)
+data.tree = tree(cleaned.rating~.,cleaned.data)
+summary(data.tree)
+plot(data.tree)
+text(data.tree, pretty = 0)
 ```
+
+
