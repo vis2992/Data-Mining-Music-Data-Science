@@ -1,0 +1,26 @@
+```{r}
+setwd("~/Documents/Data Mining/Final Project/")
+training.data = read.csv("trainData.csv")
+summary(training.data)
+```
+
+```{r}
+Y = ifelse(training.data$HEARD_OF %in% c("Never heard of", "", NA), 0, 
+           ifelse(training.data$HEARD_OF == "Heard of", 1, 
+                  ifelse(training.data$HEARD_OF %in% c("Heard of and listened to music RECENTLY", "listened to recently"), 2,
+                         ifelse(training.data$HEARD_OF %in% 
+                                  c("Ever heard music by", "Ever heard of", "Heard of and listened to music EVER"), 3, 4))))
+training.data = data.frame(training.data, Y)
+```
+
+
+```{r}
+library(tree)
+Like = ifelse(training.data$Rating >= 50, "Yes", "No")
+training.data = data.frame(training.data, Like)
+tree.training = tree(Like~.-Rating-Like, training.data)
+summary(tree.training)
+plot(tree.training)
+text(tree.training, pretty = 0)
+```
+
